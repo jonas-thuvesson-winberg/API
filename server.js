@@ -62,13 +62,13 @@ var getCountriesFunc = async () => {
     .children('td');
 
   // NOTE: this will change when table format change in website
-  const totalColumns = 8;
+  const totalColumns = 9;
   const countryColIndex = 0;
   const casesColIndex = 1;
   const todayCasesColIndex = 2;
   const deathsColIndex = 3;
   const todayDeathsColIndex = 4;
-  const curedColIndex = 6;
+  const curedColIndex = 5;
   const criticalColIndex = 7;
 
   // minus totalColumns to skip last row, which is total
