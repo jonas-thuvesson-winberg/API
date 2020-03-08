@@ -190,7 +190,13 @@ init();
 var getAll = setInterval(getAllFunc, 60000);
 var getCountries = setInterval(getCountriesFunc, 60000);
 
-app.get('/', cors(), async function(request, response) {
+var corsOptions = {
+  origin: '*'
+};
+
+var c = cors(corsOptions);
+
+app.get('/', c, async function(request, response) {
   let a = await db.fetch('all');
   response.send(
     `${a.cases} cases are reported of the COVID-19 Novel Coronavirus strain<br> ${a.deaths} have died from it <br>\n${a.recovered} have recovered from it <br> Get the endpoint /all to get information for all cases <br> get the endpoint /countries for getting the data sorted country wise`
@@ -201,12 +207,12 @@ var listener = app.listen(process.env.PORT || 3000, function() {
   console.log('Your app is listening on port ' + listener.address().port);
 });
 
-app.get('/all/', cors(), async function(req, res) {
+app.get('/all/', c, async function(req, res) {
   let all = await db.fetch('all');
   res.send(all);
 });
 
-app.get('/countries/', cors(), async function(req, res) {
+app.get('/countries/', c, async function(req, res) {
   let countries = await db.fetch('countries');
   res.send(countries);
 });
