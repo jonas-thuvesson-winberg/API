@@ -2,7 +2,7 @@
   "name": "novel-covid-api-jtw-fork",
   "version": "0.9.0",
   "description": "A simple Node API for getting coronavirus cases from scraped information. Based on https://github.com/NovelCOVID/API",
-  "main": "server.js",
+  "main": "index.js",
   "author": {
     "name": "Jonas Thuvesson Winberg",
     "url": "https://github.com/jonas-thuvesson-winberg"
@@ -14,7 +14,8 @@
     }
   ],
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "build": "tsc index.ts"
   },
   "dependencies": {
     "axios": "^0.19.2",
@@ -27,10 +28,13 @@
   "repository": {
     "url": "https://github.com/NovelCOVID/API"
   },
-  "license": "GPL 3",
+  "license": "GPL-3.0-only",
   "keywords": [
     "API",
     "coronavirus",
     "covid"
-  ]
+  ],
+  "devDependencies": {
+    "typescript": "^3.8.3"
+  }
 }
