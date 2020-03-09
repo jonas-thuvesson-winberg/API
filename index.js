@@ -81,22 +81,43 @@ var getAllFunc = function () { return __awaiter(_this, void 0, void 0, function 
         }
     });
 }); };
+var parseCountryCol = function (cell) {
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
+    var country = ((_a = cell === null || cell === void 0 ? void 0 : cell.children[0]) === null || _a === void 0 ? void 0 : _a.data) || ((_c = (_b = cell === null || cell === void 0 ? void 0 : cell.children[0]) === null || _b === void 0 ? void 0 : _b.children[0]) === null || _c === void 0 ? void 0 : _c.data) || ((_f = (_e = (_d = 
+    // country name with link has another level
+    cell === null || 
+    // country name with link has another level
+    cell === void 0 ? void 0 : 
+    // country name with link has another level
+    cell.children[0]) === null || _d === void 0 ? void 0 : _d.children[0]) === null || _e === void 0 ? void 0 : _e.children[0]) === null || _f === void 0 ? void 0 : _f.data) || ((_k = (_j = (_h = (_g = cell === null || cell === void 0 ? void 0 : cell.children[0]) === null || _g === void 0 ? void 0 : _g.children[0]) === null || _h === void 0 ? void 0 : _h.children[0]) === null || _j === void 0 ? void 0 : _j.children[0]) === null || _k === void 0 ? void 0 : _k.data) ||
+        '';
+    country = country === null || country === void 0 ? void 0 : country.trim();
+    if ((country === null || country === void 0 ? void 0 : country.length) === 0) {
+        // parse with hyperlink
+        country = ((_o = (_m = (_l = cell === null || cell === void 0 ? void 0 : cell.children[0]) === null || _l === void 0 ? void 0 : _l.next) === null || _m === void 0 ? void 0 : _m.children[0]) === null || _o === void 0 ? void 0 : _o.data) || '';
+    }
+    return country;
+};
+var parseCol = function (cell) {
+    var _a;
+    var colValue = ((_a = cell === null || cell === void 0 ? void 0 : cell.children[0]) === null || _a === void 0 ? void 0 : _a.data) || '';
+    return parseInt((colValue === null || colValue === void 0 ? void 0 : colValue.trim().replace(/,/g, '')) || '0', 10);
+};
 var getCountriesFunc = function () { return __awaiter(_this, void 0, void 0, function () {
-    var response, err_2, result, html, countriesTable, countriesTableCells, totalColumns, countryColIndex, casesColIndex, todayCasesColIndex, deathsColIndex, todayDeathsColIndex, curedColIndex, criticalColIndex, i, cell, country, cases, cases, deaths, deaths, cured, critical;
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v;
-    return __generator(this, function (_w) {
-        switch (_w.label) {
+    var response, err_2, result, html, countriesTable, countriesTableCells, totalColumns, countryColIndex, props, i, cell, country;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
             case 0:
-                _w.trys.push([0, 2, , 3]);
+                _a.trys.push([0, 2, , 3]);
                 return [4 /*yield*/, axios.get('https://www.worldometers.info/coronavirus/')];
             case 1:
-                response = _w.sent();
+                response = _a.sent();
                 if (response.status !== 200) {
                     console.log('Error', response.status);
                 }
                 return [3 /*break*/, 3];
             case 2:
-                err_2 = _w.sent();
+                err_2 = _a.sent();
                 return [2 /*return*/, null];
             case 3:
                 result = [];
@@ -108,63 +129,27 @@ var getCountriesFunc = function () { return __awaiter(_this, void 0, void 0, fun
                     .children('td');
                 totalColumns = 9;
                 countryColIndex = 0;
-                casesColIndex = 1;
-                todayCasesColIndex = 2;
-                deathsColIndex = 3;
-                todayDeathsColIndex = 4;
-                curedColIndex = 5;
-                criticalColIndex = 7;
+                props = [
+                    'cases',
+                    'todayCases',
+                    'deaths',
+                    'todayDeaths',
+                    'recovered',
+                    'active',
+                    'critical',
+                    'casesPerMillionPopulation'
+                ];
                 // minus totalColumns to skip last row, which is total
                 for (i = 0; i < countriesTableCells.length - totalColumns; i += 1) {
                     cell = countriesTableCells[i];
-                    // get country
                     if (i % totalColumns === countryColIndex) {
-                        country = ((_a = cell === null || cell === void 0 ? void 0 : cell.children[0]) === null || _a === void 0 ? void 0 : _a.data) || ((_c = (_b = cell === null || cell === void 0 ? void 0 : cell.children[0]) === null || _b === void 0 ? void 0 : _b.children[0]) === null || _c === void 0 ? void 0 : _c.data) || ((_f = (_e = (_d = 
-                        // country name with link has another level
-                        cell === null || 
-                        // country name with link has another level
-                        cell === void 0 ? void 0 : 
-                        // country name with link has another level
-                        cell.children[0]) === null || _d === void 0 ? void 0 : _d.children[0]) === null || _e === void 0 ? void 0 : _e.children[0]) === null || _f === void 0 ? void 0 : _f.data) || ((_k = (_j = (_h = (_g = cell === null || cell === void 0 ? void 0 : cell.children[0]) === null || _g === void 0 ? void 0 : _g.children[0]) === null || _h === void 0 ? void 0 : _h.children[0]) === null || _j === void 0 ? void 0 : _j.children[0]) === null || _k === void 0 ? void 0 : _k.data) ||
-                            '';
-                        country = country === null || country === void 0 ? void 0 : country.trim();
-                        if ((country === null || country === void 0 ? void 0 : country.length) === 0) {
-                            // parse with hyperlink
-                            country = ((_o = (_m = (_l = cell === null || cell === void 0 ? void 0 : cell.children[0]) === null || _l === void 0 ? void 0 : _l.next) === null || _m === void 0 ? void 0 : _m.children[0]) === null || _o === void 0 ? void 0 : _o.data) || '';
-                        }
+                        country = parseCountryCol(cell);
                         result.push({
                             country: (country === null || country === void 0 ? void 0 : country.trim()) || ''
                         });
                     }
-                    // get cases
-                    if (i % totalColumns === casesColIndex) {
-                        cases = ((_p = cell === null || cell === void 0 ? void 0 : cell.children[0]) === null || _p === void 0 ? void 0 : _p.data) || '';
-                        result[result.length - 1].cases = parseInt((cases === null || cases === void 0 ? void 0 : cases.trim().replace(/,/g, '')) || '0', 10);
-                    }
-                    // get today cases
-                    if (i % totalColumns === todayCasesColIndex) {
-                        cases = ((_q = cell === null || cell === void 0 ? void 0 : cell.children[0]) === null || _q === void 0 ? void 0 : _q.data) || '';
-                        result[result.length - 1].todayCases = parseInt((cases === null || cases === void 0 ? void 0 : cases.trim().replace(/,/g, '')) || '0', 10);
-                    }
-                    // get deaths
-                    if (i % totalColumns === deathsColIndex) {
-                        deaths = ((_r = cell === null || cell === void 0 ? void 0 : cell.children[0]) === null || _r === void 0 ? void 0 : _r.data) || '';
-                        result[result.length - 1].deaths = parseInt(((_s = deaths === null || deaths === void 0 ? void 0 : deaths.trim()) === null || _s === void 0 ? void 0 : _s.replace(/,/g, '')) || '0', 10);
-                    }
-                    // get today deaths
-                    if (i % totalColumns === todayDeathsColIndex) {
-                        deaths = ((_t = cell === null || cell === void 0 ? void 0 : cell.children[0]) === null || _t === void 0 ? void 0 : _t.data) || '';
-                        result[result.length - 1].todayDeaths = parseInt((deaths === null || deaths === void 0 ? void 0 : deaths.trim().replace(/,/g, '')) || '0', 10);
-                    }
-                    // get cured
-                    if (i % totalColumns === curedColIndex) {
-                        cured = ((_u = cell === null || cell === void 0 ? void 0 : cell.children[0]) === null || _u === void 0 ? void 0 : _u.data) || 0;
-                        result[result.length - 1].recovered = parseInt((cured === null || cured === void 0 ? void 0 : cured.trim().replace(/,/g, '')) || 0, 10);
-                    }
-                    // get critical
-                    if (i % totalColumns === criticalColIndex) {
-                        critical = ((_v = cell === null || cell === void 0 ? void 0 : cell.children[0]) === null || _v === void 0 ? void 0 : _v.data) || '';
-                        result[result.length - 1].critical = parseInt((critical === null || critical === void 0 ? void 0 : critical.trim().replace(/,/g, '')) || '0', 10);
+                    else {
+                        result[result.length - 1][props[(i - 1) % totalColumns]] = parseCol(cell);
                     }
                 }
                 db.set('countries', result);

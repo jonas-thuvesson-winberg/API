@@ -39,6 +39,27 @@ var getAllFunc = async () => {
   console.log('Updated The Cases', result);
 };
 
+const parseCountryCol = (cell): string => {
+  let country =
+    cell?.children[0]?.data ||
+    cell?.children[0]?.children[0]?.data ||
+    // country name with link has another level
+    cell?.children[0]?.children[0]?.children[0]?.data ||
+    cell?.children[0]?.children[0]?.children[0]?.children[0]?.data ||
+    '';
+  country = country?.trim();
+  if (country?.length === 0) {
+    // parse with hyperlink
+    country = cell?.children[0]?.next?.children[0]?.data || '';
+  }
+  return country;
+};
+
+const parseCol = cell => {
+  let colValue = cell?.children[0]?.data || '';
+  return parseInt(colValue?.trim().replace(/,/g, '') || '0', 10);
+};
+
 var getCountriesFunc = async () => {
   let response;
   try {
@@ -64,82 +85,29 @@ var getCountriesFunc = async () => {
   // NOTE: this will change when table format change in website
   const totalColumns = 9;
   const countryColIndex = 0;
-  const casesColIndex = 1;
-  const todayCasesColIndex = 2;
-  const deathsColIndex = 3;
-  const todayDeathsColIndex = 4;
-  const curedColIndex = 5;
-  const criticalColIndex = 7;
+
+  const props = [
+    'cases',
+    'todayCases',
+    'deaths',
+    'todayDeaths',
+    'recovered',
+    'active',
+    'critical',
+    'casesPerMillionPopulation'
+  ];
 
   // minus totalColumns to skip last row, which is total
   for (let i = 0; i < countriesTableCells.length - totalColumns; i += 1) {
     const cell = countriesTableCells[i];
 
-    // get country
     if (i % totalColumns === countryColIndex) {
-      let country =
-        cell?.children[0]?.data ||
-        cell?.children[0]?.children[0]?.data ||
-        // country name with link has another level
-        cell?.children[0]?.children[0]?.children[0]?.data ||
-        cell?.children[0]?.children[0]?.children[0]?.children[0]?.data ||
-        '';
-      country = country?.trim();
-      if (country?.length === 0) {
-        // parse with hyperlink
-        country = cell?.children[0]?.next?.children[0]?.data || '';
-      }
+      let country = parseCountryCol(cell);
       result.push({
         country: country?.trim() || ''
       });
-    }
-    // get cases
-    if (i % totalColumns === casesColIndex) {
-      let cases = cell?.children[0]?.data || '';
-      result[result.length - 1].cases = parseInt(
-        cases?.trim().replace(/,/g, '') || '0',
-        10
-      );
-    }
-    // get today cases
-    if (i % totalColumns === todayCasesColIndex) {
-      let cases = cell?.children[0]?.data || '';
-      result[result.length - 1].todayCases = parseInt(
-        cases?.trim().replace(/,/g, '') || '0',
-        10
-      );
-    }
-    // get deaths
-    if (i % totalColumns === deathsColIndex) {
-      let deaths = cell?.children[0]?.data || '';
-      result[result.length - 1].deaths = parseInt(
-        deaths?.trim()?.replace(/,/g, '') || '0',
-        10
-      );
-    }
-    // get today deaths
-    if (i % totalColumns === todayDeathsColIndex) {
-      let deaths = cell?.children[0]?.data || '';
-      result[result.length - 1].todayDeaths = parseInt(
-        deaths?.trim().replace(/,/g, '') || '0',
-        10
-      );
-    }
-    // get cured
-    if (i % totalColumns === curedColIndex) {
-      let cured = cell?.children[0]?.data || 0;
-      result[result.length - 1].recovered = parseInt(
-        cured?.trim().replace(/,/g, '') || 0,
-        10
-      );
-    }
-    // get critical
-    if (i % totalColumns === criticalColIndex) {
-      let critical = cell?.children[0]?.data || '';
-      result[result.length - 1].critical = parseInt(
-        critical?.trim().replace(/,/g, '') || '0',
-        10
-      );
+    } else {
+      result[result.length - 1][props[(i - 1) % totalColumns]] = parseCol(cell);
     }
   }
 
